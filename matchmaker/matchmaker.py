@@ -1,5 +1,5 @@
 from operator import itemgetter
-import QueryContext
+from .QueryContext import getMatchHistory
 import random
 
 
@@ -7,7 +7,7 @@ class Matchmaker:
     def __init__(self, tournament_id):
 
         self.tournament_id = tournament_id
-        self.match_history = QueryContext.getMatchHistory(self.tournament_id)
+        self.match_history = getMatchHistory(self.tournament_id)
 
         self.players = self.match_history["data"]["Tournament"][0]["Ladder"]
         random.shuffle(self.players)

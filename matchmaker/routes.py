@@ -1,8 +1,6 @@
-from NextRoundMatchesTypes import NextRoundMatchesArgs, NextRoundMatchesOutput
-from flask import Flask, request, jsonify
-from matchmaker import Matchmaker
-
-app = Flask(__name__)
+from .NextRoundMatchesTypes import NextRoundMatchesArgs, NextRoundMatchesOutput
+from .matchmaker import Matchmaker
+from flask import request, current_app as app
 
 
 @app.route("/NextRoundMatches", methods=["POST"])
@@ -14,8 +12,3 @@ def NextRoundMatchesHandler():
     [print(p) for p in mm.pairings]
 
     return NextRoundMatchesOutput(mm.pairings).to_json()
-
-
-if __name__ == "__main__":
-    print("I was run-ningh!")
-    app.run(debug=True, host="0.0.0.0")
