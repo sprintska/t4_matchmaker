@@ -27,4 +27,3 @@ class Query(RequestMixin):
 @dataclass
 class NextRoundMatchesArgs(RequestMixin):
     tournament_id: Optional[any]
-    round: Optional[any]
