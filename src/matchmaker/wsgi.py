@@ -1,4 +1,4 @@
-from matchmaker import create_app
+from matchmaker.application import create_app
 
 app = create_app()
 

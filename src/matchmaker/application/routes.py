@@ -12,3 +12,20 @@ def NextRoundMatchesHandler():
     [print(p) for p in mm.pairings]
 
     return NextRoundMatchesOutput(mm.pairings).to_json()
+
+
+@app.route("/")
+def default():
+    return """
+        <html>
+            <head>
+                <title>Matchmaker</title>
+            </head>
+            <body>
+                <h2>Matchmaker Interface</h2>
+                <p>Documentation--such as it is--
+                    <a href='https://github.com/sprintska/t4_matchmaker'>here</a>
+                    .
+                </p>
+            </body>
+        </html>"""
