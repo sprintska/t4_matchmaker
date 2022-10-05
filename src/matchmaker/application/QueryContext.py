@@ -1,12 +1,7 @@
 import requests
 
 
-HASURA_ENDPOINT_URL = "http://localhost:8080/v1/graphql"
-
-
-def Query(operation_name, operation_doc, variables):
-
-    url = HASURA_ENDPOINT_URL
+def Query(operation_name, operation_doc, variables, url):
 
     r = requests.post(
         url,
@@ -20,7 +15,7 @@ def Query(operation_name, operation_doc, variables):
     return r.json()
 
 
-def getMatchHistory(tourney_id):
+def getMatchHistory(tourney_id, url):
 
     operation_name = "getMatchHistory"
     vars = {"tournament_id": str(tourney_id)}
@@ -42,6 +37,6 @@ def getMatchHistory(tourney_id):
         }
     """
 
-    match_history = Query(operation_name, get_match_history_doc, vars)
+    match_history = Query(operation_name, get_match_history_doc, vars, url)
 
     return match_history

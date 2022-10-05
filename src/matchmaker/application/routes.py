@@ -6,7 +6,7 @@ from flask import request, current_app as app
 @app.route("/NextRoundMatches", methods=["POST"])
 def NextRoundMatchesHandler():
     args = NextRoundMatchesArgs.from_request(request.get_json())
-    mm = Matchmaker(args.tournament_id)
+    mm = Matchmaker(args.tournament_id, app.HASURA_URL)
     mm.generateMatches()
 
     [print(p) for p in mm.pairings]
