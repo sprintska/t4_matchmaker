@@ -7,7 +7,7 @@ from flask import request, current_app as app
 def NextRoundMatchesHandler():
     args = NextRoundMatchesArgs.from_request(request.get_json())
     mm = Matchmaker(args.tournament_id)
-    mm.generateMatches()
+    mm.generatePairings()
     if not mm.pairings:
         return 0
     else:

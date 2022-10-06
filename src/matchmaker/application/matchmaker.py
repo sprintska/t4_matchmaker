@@ -22,7 +22,11 @@ class Matchmaker:
         self.pairings = []
         self.bye = None
 
-    def generateMatches(self):
+    def generatePairings(self):
+
+        # Fail gracefully if the tournament ladder is empty
+        if not self.players:
+            return False
 
         # Rank players to find last place for the bye
         players_ranked = sorted(
