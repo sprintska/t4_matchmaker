@@ -67,6 +67,8 @@ class Matchmaker:
         return player
 
     def matchmakePlayer(self, player, player_index):
+        # Recurse through the pairings order until we find the first player
+        # this player hasn't played against before, then pair them.
 
         if (len(self.players_in_pairing_order) == player_index + 1) or (
             self.players_in_pairing_order[player_index + 1]
