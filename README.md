@@ -18,16 +18,12 @@ _Packaging and build references here: Packaging references here: https://packagi
 - Move the wheel from ./dist/matchmaker-0.X.X-py3-none-any.whl into ./docker_setup/.
 - Ensure `build.dockerfile` is updated, particularly ensuring MATCHMAKER_HASURA_ADMIN_SECRET, MATCHMAKER_HASURA_URL, and MATCHMAKER_DOMAIN are set correctly.
 - From ./docker_setup/, build the Docker image.
-  `docker build -t matchmaker:latest -f .\build.dockerfile .`
+  `docker build -t matchmaker:latest -f ./build.dockerfile .`
 - Log Docker into AWS private ECR registry (requires AWS CLI configured and authorized for the private registry).
   `aws ecr get-login-password --region us-west-2 | docker login --username AWS \`
   `--password-stdin ACCT_ID_NUMBER.dkr.ecr.us-west-2.amazonaws.com`
 - Push the Docker image to the private registry.
   `docker tag matchmaker:latest \`
-  `ACCT_ID_NUMBER.dkr.ecr.us-west-2.amazonaws.com matchmaker:latest`
+  `ACCT_ID_NUMBER.dkr.ecr.us-west-2.amazonaws.com/matchmaker:latest`
   `docker push ACCT_ID_NUMBER.dkr.ecr.us-west-2.amazonaws.com/matchmaker:latest`
-
-## Update App Runner with the new build
-
-- Pull the new image to the Apprunner service.
-  `aws apprunner update-service --service-arn "arn:aws:apprunner:us-west-2:ACCT_ID_NUMBER:service/Matchmaker/LONG_SERVICE_ARN_IDENTIFIER"`
+- Update Apprunner to pull the latest image. The dev environment is configured to automatically pull updates from the registry.

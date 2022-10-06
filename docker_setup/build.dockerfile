@@ -4,21 +4,6 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONUNBUFFERED 1
 ENV DEV 1
 
-ENV MATCHMAKER_TESTING 0
-ENV MATCHMAKER_DEBUG 0
-ENV MATCHMAKER_SECRET_KEY 0
-ENV MATCHMAKER_HASURA_ADMIN_SECRET password
-ENV MATCHMAKER_HASURA_URL url.to.hasura
-ENV MATCHMAKER_DOMAIN url.to.this.service
-
-# If DEV:
-# this server's URL = matchmaker.advancedtransponder.net
-# hasura URL = hasura.advancedtransponder.net
-
-# If PROD:
-# this server's URL = matchmaker.tabletoptournament.tools
-# hasura URL = graphql-engine.tabletoptournament.tools
-
 RUN apt-get update -y
 RUN apt-get install -y nginx systemctl
 
@@ -29,6 +14,13 @@ WORKDIR /usr/src/matchmaker
 
 COPY ./matchmaker /etc/nginx/sites-available
 RUN ln -s /etc/nginx/sites-available/matchmaker /etc/nginx/sites-enabled/
+
+ENV MATCHMAKER_TESTING 0
+ENV MATCHMAKER_DEBUG 0
+ENV MATCHMAKER_SECRET_KEY 0
+ENV MATCHMAKER_HASURA_ADMIN_SECRET password
+ENV MATCHMAKER_HASURA_URL url.to.hasura
+ENV MATCHMAKER_DOMAIN url.to.this.service
 
 COPY ./nginx_conf_fix.sh ./
 RUN chmod +x ./nginx_conf_fix.sh

@@ -4,7 +4,7 @@ from flask import current_app as app
 
 def Query(operation_name, operation_doc, variables):
 
-    url = "https://{}".format(app.config["HASURA_URL"])
+    url = "https://{}".format(app.config["MATCHMAKER_HASURA_URL"])
     data = {
         "query": str(operation_doc),
         "variables": variables,
