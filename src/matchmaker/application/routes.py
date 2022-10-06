@@ -8,10 +8,10 @@ def NextRoundMatchesHandler():
     args = NextRoundMatchesArgs.from_request(request.get_json())
     mm = Matchmaker(args.tournament_id)
     mm.generateMatches()
-
-    [print(p) for p in mm.pairings]
-
-    return NextRoundMatchesOutput(mm.pairings).to_json()
+    if not mm.pairings:
+        return 0
+    else:
+        return len(NextRoundMatchesOutput(mm.pairings)).to_json()
 
 
 @app.route("/")

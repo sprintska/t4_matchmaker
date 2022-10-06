@@ -9,7 +9,13 @@ class Matchmaker:
         self.tournament_id = tournament_id
         self.match_history = getMatchHistory(self.tournament_id)
 
-        self.players = self.match_history["data"]["Tournament"][0]["Ladder"]
+        try:
+            self.players = self.match_history["data"]["Tournament"][0]["Ladder"]
+        except KeyError:
+            self.players = False
+            self.pairings = False
+            return
+
         random.shuffle(self.players)
         self.unpaired_players = self.players
 
