@@ -16,11 +16,11 @@ class RequestMixin:
 
 @dataclass
 class NextRoundMatchesOutput(RequestMixin):
-    id: any
+    affected_rows: int
 
 
 @dataclass
-class Query(RequestMixin):
+class Mutation(RequestMixin):
     NextRoundMatches: Optional[NextRoundMatchesOutput]
 
 

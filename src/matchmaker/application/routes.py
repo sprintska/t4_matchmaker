@@ -9,9 +9,9 @@ def NextRoundMatchesHandler():
     mm = Matchmaker(args.tournament_id)
     mm.generatePairings()
     if not mm.pairings:
-        return 0
+        return NextRoundMatchesOutput(0).to_json()
     else:
-        return len(NextRoundMatchesOutput(mm.pairings)).to_json()
+        return NextRoundMatchesOutput(len(mm.pairings)).to_json()
 
 
 @app.route("/")
