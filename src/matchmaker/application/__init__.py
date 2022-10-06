@@ -7,7 +7,7 @@ def create_app(test_config=None):
 
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_prefixed_env(prefix="MATCHMAKER_")
-    app.config.from_envvar("MATCHMAKER_HASURA_URL", silent=False)
+    app.config["HASURA_URL"] = os.environ.get("MATCHMAKER_HASURA_URL")
 
     try:
         os.makedirs(app.instance_path)
