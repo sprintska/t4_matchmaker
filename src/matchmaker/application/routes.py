@@ -10,8 +10,7 @@ def NextRoundMatchesHandler():
     mm.generatePairings()
     if not mm.pairings:
         return NextRoundMatchesOutput(0).to_json()
-    else:
-        return NextRoundMatchesOutput(len(mm.pairings)).to_json()
+    mm.postPairings()
 
 
 @app.route("/")

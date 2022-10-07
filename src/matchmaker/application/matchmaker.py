@@ -1,5 +1,5 @@
 from operator import itemgetter
-from .QueryContext import getMatchHistory
+from .QueryContext import createMatches, getMatchHistory
 import random
 
 from flask import current_app as app
@@ -10,6 +10,11 @@ class Matchmaker:
 
         self.tournament_id = tournament_id
         self.match_history = getMatchHistory(self.tournament_id)
+
+        rounds_completed = [
+            match["round"] for match in self.match_history["data"]["Match"]
+        ]
+        self.round = int(max(rounds_completed)) + 1 if rounds_completed else 1
 
         try:
             self.players = self.match_history["data"]["Tournament"][0]["Ladder"]
@@ -69,7 +74,10 @@ class Matchmaker:
             if player in self.unpaired_players:
                 self.pairings.append(self.matchmakePlayer(player, p_idx))
 
-        app.logger.debug("{} has the bye".format(self.bye["id"]))
+        if self.bye:
+            app.logger.debug("{} has the bye".format(self.bye["id"]))
+        else:
+            app.logger.debug("No bye.")
 
     def addPreviousOpponents(self, player):
 
@@ -89,8 +97,8 @@ class Matchmaker:
         return player
 
     def matchmakePlayer(self, player, player_index):
-        # Recurse through the pairings order until we find the first player
-        # this player hasn't played against before, then pair them.
+        """Recurse through the pairings order until we find the first player
+        this player hasn't played against before, then pair them."""
 
         if (len(self.players_in_pairing_order) == player_index + 1) or (
             self.players_in_pairing_order[player_index + 1]
@@ -108,3 +116,14 @@ class Matchmaker:
             return [player, self.players_in_pairing_order[player_index + 1]]
         else:
             return self.matchmakePlayer(player, player_index + 1)
+
+    def postPairings(self):
+        """Create the next round's matches, then post the players to them."""
+
+        match_count = len(self.pairings)
+
+        if self.bye:
+            match_count += 1
+
+        new_match_ids = createMatches(self.tournament_id, self.round, match_count)
+        app.logger.info(new_match_ids)

@@ -30,6 +30,7 @@ def getMatchHistory(tourney_id):
                 Players {
                     player_id
                 }
+                round
             }
             Tournament(where: {id: {_eq: $tournament_id}}) {
                 Ladder {
@@ -47,24 +48,20 @@ def getMatchHistory(tourney_id):
     return match_history
 
 
-# def createMatches(tourney_id):
+def createMatches(tourney_id, round, count):
 
-#     operation_name = "createMatches"
-#     vars = {"tournament_id": str(tourney_id)}
-#     get_match_history_doc = """
-#         query getMatchHistory($tournament_id: uuid = "") {
-#             Match(where: {tournament_id: {_eq: $tournament_id}}) {
-#                 Players {
-#                     player_id
-#                 }
-#             }
-#             Tournament(where: {id: {_eq: $tournament_id}}) {
-#                 Ladder {
-#                     id
-#                     tournament_points
-#                     mov
-#                     sos
-#                 }
-#             }
-#         }
-#     """
+    operation_name = "CreateMatches"
+    vars = [{"tournament_id": tourney_id, "round": round} for _ in range(count)]
+    create_matches_doc = """
+        mutation CreateMatches($matches: [Match_insert_input!] !) {
+        insert_Match(objects: $matches) {
+            returning {
+            id
+            }
+        }
+        }
+    """
+
+    new_match_ids = Query(operation_name, create_matches_doc, vars)
+
+    return new_match_ids
