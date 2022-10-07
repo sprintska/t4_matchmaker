@@ -1,6 +1,5 @@
 import os
 import requests
-from flask import current_app as app
 
 
 def Query(operation_name, operation_doc, variables):

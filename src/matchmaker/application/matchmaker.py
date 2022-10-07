@@ -2,6 +2,8 @@ from operator import itemgetter
 from .QueryContext import getMatchHistory
 import random
 
+from flask import current_app as app
+
 
 class Matchmaker:
     def __init__(self, tournament_id):
@@ -59,7 +61,7 @@ class Matchmaker:
             if player in self.unpaired_players:
                 self.pairings.append(self.matchmakePlayer(player, p_idx))
 
-        print("{} has the bye".format(self.bye["id"]))
+        app.logger.debug("{} has the bye".format(self.bye["id"]))
 
     def addPreviousOpponents(self, player):
 
@@ -90,7 +92,7 @@ class Matchmaker:
             self.unpaired_players.remove(
                 self.players_in_pairing_order[player_index + 1]
             )
-            print(
+            app.logger.debug(
                 "{} playing {}".format(
                     player["id"], self.players_in_pairing_order[player_index + 1]
                 )
