@@ -13,7 +13,15 @@ class Matchmaker:
 
         try:
             self.players = self.match_history["data"]["Tournament"][0]["Ladder"]
+            app.logger.debug("  Player list: ")
+            [app.logger.debug(p) for p in self.players]
         except KeyError:
+            app.logger.debug(
+                "Aborting... found no players in the ladder for tournament {}.".format(
+                    tournament_id
+                )
+            )
+
             self.players = False
             self.pairings = False
             return
