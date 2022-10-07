@@ -51,17 +51,35 @@ def getMatchHistory(tourney_id):
 def createMatches(tourney_id, round, count):
 
     operation_name = "CreateMatches"
-    vars = [{"tournament_id": tourney_id, "round": round} for _ in range(count)]
+    matches_list = [{"tournament_id": tourney_id, "round": round} for _ in range(count)]
+    vars = {"matches": matches_list}
     create_matches_doc = """
         mutation CreateMatches($matches: [Match_insert_input!] !) {
-        insert_Match(objects: $matches) {
-            returning {
-            id
+            insert_Match(objects: $matches) {
+                returning {
+                    id
+                }
             }
+        }
+    """
+
+    new_matches = Query(operation_name, create_matches_doc, vars)
+
+    return new_matches
+
+
+def createMatchPlayer(player, match_id):
+
+    operation_name = "CreateMatchPlayer"
+    vars = {"player_id": player, "match_id": match_id}
+    create_matches_doc = """
+        mutation MyMutation($player_id: uuid = "", $match_id: uuid = "") {
+        insert_MatchPlayer(objects: {player_id: $player_id, match_id: $match_id, points: 0, tournament_points: 0}) {
+            affected_rows
         }
         }
     """
 
-    new_match_ids = Query(operation_name, create_matches_doc, vars)
+    success = Query(operation_name, create_matches_doc, vars)
 
-    return new_match_ids
+    return success

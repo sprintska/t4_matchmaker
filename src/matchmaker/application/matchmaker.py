@@ -1,5 +1,5 @@
 from operator import itemgetter
-from .QueryContext import createMatches, getMatchHistory
+from .QueryContext import createMatches, createMatchPlayer, getMatchHistory
 import random
 
 from flask import current_app as app
@@ -125,5 +125,23 @@ class Matchmaker:
         if self.bye:
             match_count += 1
 
-        new_match_ids = createMatches(self.tournament_id, self.round, match_count)
-        app.logger.info(new_match_ids)
+        new_matches = createMatches(self.tournament_id, self.round, match_count)
+
+        new_match_ids = [match["id"] for match in new_matches["data"["insert_Match"]]]
+
+        for pair in self.pairings:
+            match_id = new_match_ids.pop()
+            for player in pair:
+                success = createMatchPlayer(player["id"], match_id)
+                success or app.logger.info(
+                    "Failed to assign player {} to match {}.".format(player, match_id)
+                )
+
+        if self.bye:
+            bye_match_id = new_match_ids.pop()
+            success = createMatchPlayer(self.bye["id"], bye_match_id)
+            success or app.logger.info(
+                "Failed to assign player {} to match {}.".format(self.bye, match_id)
+            )
+
+        return True
