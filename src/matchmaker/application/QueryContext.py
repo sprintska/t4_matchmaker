@@ -43,3 +43,26 @@ def getMatchHistory(tourney_id):
     match_history = Query(operation_name, get_match_history_doc, vars)
 
     return match_history
+
+
+# def createMatches(tourney_id):
+
+#     operation_name = "createMatches"
+#     vars = {"tournament_id": str(tourney_id)}
+#     get_match_history_doc = """
+#         query getMatchHistory($tournament_id: uuid = "") {
+#             Match(where: {tournament_id: {_eq: $tournament_id}}) {
+#                 Players {
+#                     player_id
+#                 }
+#             }
+#             Tournament(where: {id: {_eq: $tournament_id}}) {
+#                 Ladder {
+#                     id
+#                     tournament_points
+#                     mov
+#                     sos
+#                 }
+#             }
+#         }
+#     """
