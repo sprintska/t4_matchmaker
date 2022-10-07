@@ -45,13 +45,13 @@ class Matchmaker:
             reverse=True,
         )
 
-        self.bye = players_ranked[-1] if len(players_ranked) % 2 == 1 else None
+        self.bye = players_ranked[-1] if len(players_ranked) % 2 else None
         not self.bye or self.unpaired_players.remove(self.bye)
 
         # Break the equal-tp players out into lists to shuffle then re-concat them
         players_by_tp = {}
 
-        for player in players_ranked:
+        for player in self.unpaired_players:
             player = self.addPreviousOpponents(player)
             players_by_tp.setdefault(player["tournament_points"], []).append(player)
 
