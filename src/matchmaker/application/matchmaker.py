@@ -59,6 +59,8 @@ class Matchmaker:
             if player in self.unpaired_players:
                 self.pairings.append(self.matchmakePlayer(player, p_idx))
 
+        print("{} has the bye".format(self.bye["id"]))
+
     def addPreviousOpponents(self, player):
 
         player["previous_opponents"] = []
@@ -87,6 +89,11 @@ class Matchmaker:
             self.unpaired_players.remove(player)
             self.unpaired_players.remove(
                 self.players_in_pairing_order[player_index + 1]
+            )
+            print(
+                "{} playing {}".format(
+                    player["id"], self.players_in_pairing_order[player_index + 1]
+                )
             )
             return [player, self.players_in_pairing_order[player_index + 1]]
         else:
