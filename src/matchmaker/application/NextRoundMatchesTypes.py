@@ -16,7 +16,7 @@ class RequestMixin:
 
 @dataclass
 class NextRoundMatchesOutput(RequestMixin):
-    affected_rows: int
+    match_ids: list[str]
 
 
 @dataclass

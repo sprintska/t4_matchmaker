@@ -127,10 +127,12 @@ class Matchmaker:
 
         new_matches = createMatches(self.tournament_id, self.round, match_count)
 
-        new_match_ids = [match["id"] for match in new_matches["data"["insert_Match"]]]
+        self.new_match_ids = [
+            match["id"] for match in new_matches["data"]["insert_Match"]["returning"]
+        ]
 
         for pair in self.pairings:
-            match_id = new_match_ids.pop()
+            match_id = self.new_match_ids.pop()
             for player in pair:
                 success = createMatchPlayer(player["id"], match_id)
                 success or app.logger.info(
@@ -138,10 +140,10 @@ class Matchmaker:
                 )
 
         if self.bye:
-            bye_match_id = new_match_ids.pop()
+            bye_match_id = self.new_match_ids.pop()
             success = createMatchPlayer(self.bye["id"], bye_match_id)
             success or app.logger.info(
                 "Failed to assign player {} to match {}.".format(self.bye, match_id)
             )
 
-        return True
+        return self.new_match_ids
