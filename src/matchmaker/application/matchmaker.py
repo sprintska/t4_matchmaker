@@ -156,4 +156,4 @@ class Matchmaker:
                     "Failed to assign player {} to match {}.".format(self.bye, match_id)
                 )
 
-        return self.out
+        return True
