@@ -156,6 +156,6 @@ class Matchmaker:
                     "Failed to assign player {} to match {}.".format(self.bye, match_id)
                 )
 
-        self.populated_match_ids = set(self.populated_match_ids)
+        self.populated_match_ids = list(set(self.populated_match_ids))
 
         return True
