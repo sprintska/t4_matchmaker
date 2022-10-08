@@ -131,6 +131,8 @@ class Matchmaker:
             match["id"] for match in new_matches["data"]["insert_Match"]["returning"]
         ]
 
+        self.out = self.new_match_ids
+
         for pair in self.pairings:
             match_id = self.new_match_ids.pop()
             for player in pair:
@@ -146,4 +148,4 @@ class Matchmaker:
                 "Failed to assign player {} to match {}.".format(self.bye, match_id)
             )
 
-        return self.new_match_ids
+        return self.out
