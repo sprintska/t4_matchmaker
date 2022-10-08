@@ -11,7 +11,7 @@ def NextRoundMatchesHandler():
     if not mm.pairings:
         return NextRoundMatchesOutput(0).to_json()
     mm.postPairings()
-    return NextRoundMatchesOutput(mm.new_match_ids).to_json()
+    return NextRoundMatchesOutput(mm.populated_match_ids).to_json()
 
 
 @app.route("/")

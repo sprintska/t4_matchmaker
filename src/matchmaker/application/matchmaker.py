@@ -131,21 +131,29 @@ class Matchmaker:
             match["id"] for match in new_matches["data"]["insert_Match"]["returning"]
         ]
 
-        self.out = self.new_match_ids
+        self.populated_match_ids = []
 
         for pair in self.pairings:
             match_id = self.new_match_ids.pop()
             for player in pair:
                 success = createMatchPlayer(player["id"], match_id)
-                success or app.logger.info(
-                    "Failed to assign player {} to match {}.".format(player, match_id)
-                )
+                if success:
+                    self.populated_match_ids.append(match_id)
+                else:
+                    app.logger.info(
+                        "Failed to assign player {} to match {}.".format(
+                            player, match_id
+                        )
+                    )
 
         if self.bye:
             bye_match_id = self.new_match_ids.pop()
             success = createMatchPlayer(self.bye["id"], bye_match_id)
-            success or app.logger.info(
-                "Failed to assign player {} to match {}.".format(self.bye, match_id)
-            )
+            if success:
+                self.populated_match_ids.append(bye_match_id)
+            else:
+                app.logger.info(
+                    "Failed to assign player {} to match {}.".format(self.bye, match_id)
+                )
 
         return self.out

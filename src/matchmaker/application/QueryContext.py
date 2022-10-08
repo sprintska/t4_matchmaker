@@ -74,9 +74,15 @@ def createMatchPlayer(player, match_id):
     vars = {"player_id": player, "match_id": match_id}
     create_matches_doc = """
         mutation CreateMatchPlayer($player_id: uuid = "", $match_id: uuid = "") {
-        insert_MatchPlayer(objects: {player_id: $player_id, match_id: $match_id, points: 0, tournament_points: 0}) {
-            affected_rows
-        }
+        insert_MatchPlayer(
+            objects: {
+                player_id: $player_id,
+                match_id: $match_id,
+                points: 0,
+                tournament_points: 0
+            }) {
+                affected_rows
+            }
         }
     """
 
