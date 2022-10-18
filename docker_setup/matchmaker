@@ -1,7 +1,7 @@
 # belongs at /etc/nginx/sites-available/matchmaker 
 server{
     listen 80;
-    server_name MATCHMAKER_NGINX_SERVER_NAME;
+    server_name _;
 
     location /NextRoundMatches {
         include proxy_params;

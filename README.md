@@ -4,7 +4,7 @@ This is the Matchmaker microservice for tabletoptournament.tools. It pairs playe
 
 Written for integration with the rest of the T4 software stack.
 
-## Build the wheel
+## Build and publish the wheel
 
 _Packaging and build references here: Packaging references here: https://packaging.python.org/en/latest/tutorials/packaging-projects/_
 
@@ -12,18 +12,24 @@ _Packaging and build references here: Packaging references here: https://packagi
 - Ensure you have python3.7+, pip and venv (`apt-get install python3-pip python3-venv`), and build (`pip3 install --upgrade build`) installed.
 - Build the wheel
   `python3 -m build`
+- Publish the wheel
+  `python3 -m twine upload dist/* # requires rights on PyPI, contact me if you need this for T4`
 
 ## Build and publish the server Docker image
 
-- Move the wheel from ./dist/matchmaker-0.X.X-py3-none-any.whl into ./docker_setup/.
-- Ensure `build.dockerfile` is updated, particularly ensuring MATCHMAKER_HASURA_ADMIN_SECRET, MATCHMAKER_HASURA_URL, and MATCHMAKER_DOMAIN are set correctly.
+- Ensure `build.dockerfile` is updated.
 - From ./docker_setup/, build the Docker image.
-  `docker build -t matchmaker:latest -f ./build.dockerfile .`
-- Log Docker into AWS private ECR registry (requires AWS CLI configured and authorized for the private registry).
-  `aws ecr get-login-password --region us-west-2 | docker login --username AWS \`
-  `--password-stdin ACCT_ID_NUMBER.dkr.ecr.us-west-2.amazonaws.com`
-- Push the Docker image to the private registry.
-  `docker tag matchmaker:latest \`
-  `ACCT_ID_NUMBER.dkr.ecr.us-west-2.amazonaws.com/matchmaker:latest`
-  `docker push ACCT_ID_NUMBER.dkr.ecr.us-west-2.amazonaws.com/matchmaker:latest`
-- Update Apprunner to pull the latest image. The dev environment is configured to automatically pull updates from the registry.
+  `docker build -t sprintska/matchmaker:vX.Y.Z -f ./build.dockerfile .`
+- Push the Docker image to Docker Hub.
+  `docker push sprintska/matchmaker:vX.Y.Z`
+
+## Deploy
+
+- Set the following env vars in your docker-compose.yml or .env file:
+  `MATCHMAKER_DEBUG=[(0),1]`
+  `MATCHMAKER_INSECURE_USE_HTTP=[(0),1]`
+  `MATCHMAKER_HASURA_URL=url.to.hasura`
+  `MATCHMAKER_DOMAIN=url.to.this.service`
+  `MATCHMAKER_HASURA_ADMIN_SECRET=hasura_secret`
+
+- Deploy with docker compose.

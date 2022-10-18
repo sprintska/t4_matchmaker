@@ -4,7 +4,10 @@ import requests
 
 def Query(operation_name, operation_doc, variables):
 
-    url = "https://{}/v1/graphql".format(os.environ.get("MATCHMAKER_HASURA_URL"))
+    if os.environ.get("MATCHMAKER_INSECURE_USE_HTTP"):
+        url = "http://{}/v1/graphql".format(os.environ.get("MATCHMAKER_HASURA_URL"))
+    else:
+        url = "https://{}/v1/graphql".format(os.environ.get("MATCHMAKER_HASURA_URL"))
     data = {
         "query": str(operation_doc),
         "variables": variables,
