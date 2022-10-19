@@ -12,7 +12,7 @@ class Matchmaker:
         self.match_history = getMatchHistory(self.tournament_id)
 
         rounds_completed = [
-            match["round"] for match in self.match_history["data"]["Match"]
+            match["Round"]["round_num"] for match in self.match_history["data"]["Match"]
         ]
         self.round = int(max(rounds_completed)) + 1 if rounds_completed else 1
 
@@ -75,7 +75,7 @@ class Matchmaker:
                 self.pairings.append(self.matchmakePlayer(player, p_idx))
 
         if self.bye:
-            app.logger.debug("{} has the bye".format(self.bye["id"]))
+            app.logger.debug("{} has the bye".format(self.bye["user_id"]))
         else:
             app.logger.debug("No bye.")
 
@@ -86,13 +86,13 @@ class Matchmaker:
         matches = self.match_history["data"]["Match"]
 
         for match in matches:
-            if player["id"] in [
-                match_player["player_id"] for match_player in match["Players"]
+            if player["user_id"] in [
+                match_player["user_id"] for match_player in match["Players"]
             ]:
                 for match_player in match["Players"]:
-                    match_player["player_id"] == player["id"] or player[
+                    match_player["user_id"] == player["user_id"] or player[
                         "previous_opponents"
-                    ].append(match_player["player_id"])
+                    ].append(match_player["user_id"])
 
         return player
 
@@ -110,7 +110,7 @@ class Matchmaker:
             )
             app.logger.debug(
                 "{} playing {}".format(
-                    player["id"], self.players_in_pairing_order[player_index + 1]
+                    player["user_id"], self.players_in_pairing_order[player_index + 1]
                 )
             )
             return [player, self.players_in_pairing_order[player_index + 1]]
@@ -130,13 +130,14 @@ class Matchmaker:
         self.new_match_ids = [
             match["id"] for match in new_matches["data"]["insert_Match"]["returning"]
         ]
+        self.new_match_ids.reverse()
 
         self.populated_match_ids = []
 
         for pair in self.pairings:
             match_id = self.new_match_ids.pop()
             for player in pair:
-                success = createMatchPlayer(player["id"], match_id)
+                success = createMatchPlayer(player["user_id"], match_id)
                 if success:
                     self.populated_match_ids.append(match_id)
                 else:
@@ -145,10 +146,11 @@ class Matchmaker:
                             player, match_id
                         )
                     )
+                    
 
         if self.bye:
             bye_match_id = self.new_match_ids.pop()
-            success = createMatchPlayer(self.bye["id"], bye_match_id)
+            success = createMatchPlayer(self.bye["user_id"], bye_match_id)
             if success:
                 self.populated_match_ids.append(bye_match_id)
             else:
@@ -156,6 +158,6 @@ class Matchmaker:
                     "Failed to assign player {} to match {}.".format(self.bye, match_id)
                 )
 
-        self.populated_match_ids = list(set(self.populated_match_ids))
+        self.populated_match_ids = list(dict.fromkeys(self.populated_match_ids))
 
         return True
