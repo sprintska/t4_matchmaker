@@ -20,7 +20,8 @@ RUN rm /etc/nginx/sites-enabled/default
 # RUN rm ./nginx_conf_fix.sh
 
 RUN pip install --upgrade pip
-RUN pip install matchmaker-t4-arm
+# RUN pip install matchmaker-t4-arm
+RUN pip install matchmaker-t4
 
 RUN chown www-data:www-data /usr/local/lib/python3.*/site-packages/matchmaker
 
